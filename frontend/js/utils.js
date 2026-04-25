@@ -1,7 +1,7 @@
 // js/utils.js
 // Shared utility functions used across all pages
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'https://tourease-backend-5xx6.onrender.com';
 
 // ==================== AUTH HELPERS ====================
 
