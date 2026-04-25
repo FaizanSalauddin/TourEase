@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tour Packages – TourEase</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">✈</div>
+      Tour<span>Ease</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="packages.html" class="active">Packages</a></li>
+      <li><a href="my-bookings.html">My Bookings</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions" id="navActions"></div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>All Tour Packages</h1>
+  <p>Choose from our wide range of curated tour packages</p>
+</div>
+
+<!-- PACKAGES SECTION -->
+<section class="section">
+  <div class="container">
+    <!-- Search / Filter Bar -->
+    <div style="display:flex; gap:12px; margin-bottom:36px; flex-wrap:wrap; align-items:center;">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="🔍  Search destinations or packages..."
+        style="flex:1; min-width:200px; padding:12px 18px; border:1.5px solid var(--border);
+               border-radius:10px; font-size:0.95rem; font-family:inherit; outline:none;"
+        oninput="filterPackages()"
+      />
+      <select id="sortSelect" onchange="filterPackages()"
+        style="padding:12px 16px; border:1.5px solid var(--border); border-radius:10px;
+               font-size:0.9rem; font-family:inherit; outline:none; background:white; cursor:pointer;">
+        <option value="">Sort By</option>
+        <option value="price_asc">Price: Low to High</option>
+        <option value="price_desc">Price: High to Low</option>
+        <option value="rating">Rating</option>
+      </select>
+    </div>
+
+    <!-- Packages grid -->
+    <div class="packages-grid" id="packagesGrid">
+      <div class="loading" style="grid-column:1/-1">
+        <div class="spinner"></div>
+        <p>Loading packages...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>✈ TourEase</h3>
+        <p>Making travel simple, memorable, and affordable for everyone.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="packages.html">Packages</a></li>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="register.html">Register</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Destinations</h4>
+        <ul>
+          <li><a href="#">Goa</a></li>
+          <li><a href="#">Rajasthan</a></li>
+          <li><a href="#">Kerala</a></li>
+          <li><a href="#">Manali</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <div class="contact-info">
+          <span>📍 123 Travel Street, Mumbai, India</span>
+          <span>📞 +91 98765 43210</span>
+          <span>✉ hello@tourease.in</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 TourEase. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/utils.js"></script>
+<script>
+  let allPackages = []; // Store all packages for filtering
+
+  // Load all packages from API
+  async function loadPackages() {
+    const grid = document.getElementById('packagesGrid');
+    try {
+      allPackages = await apiRequest('/packages');
+      renderPackages(allPackages);
+    } catch (err) {
+      grid.innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1">
+          <div class="icon">⚠</div>
+          <h3>Could not load packages</h3>
+          <p>Make sure the backend server is running on port 5000.</p>
+        </div>`;
+    }
+  }
+
+  // Render packages to grid
+  function renderPackages(packages) {
+    const grid = document.getElementById('packagesGrid');
+    if (packages.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1">
+          <div class="icon">🔍</div>
+          <h3>No packages found</h3>
+          <p>Try a different search keyword.</p>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = packages.map(pkg => `
+      <div class="package-card">
+        <div class="package-img">
+          <img src="${pkg.image}" alt="${pkg.title}" loading="lazy"
+               onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80'" />
+          <span class="package-badge">⭐ ${pkg.rating || 4.5}</span>
+        </div>
+        <div class="package-body">
+          <h3>${pkg.title}</h3>
+          <div class="package-meta">
+            <span>📍 ${pkg.location}</span>
+            <span>🕐 ${pkg.duration}</span>
+          </div>
+          <p style="font-size:0.88rem; color:var(--text-light); margin-bottom:12px; line-height:1.5;">
+            ${pkg.description ? pkg.description.substring(0, 90) + '...' : ''}
+          </p>
+          <div class="package-footer">
+            <div class="package-price">
+              ${formatPrice(pkg.price)} <small>/ person</small>
+            </div>
+            <a href="details.html?id=${pkg._id}" class="btn-primary" style="font-size:0.85rem; padding:8px 18px;">
+              View Details
+            </a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Filter and sort packages
+  function filterPackages() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const sort = document.getElementById('sortSelect').value;
+
+    let filtered = allPackages.filter(pkg =>
+      pkg.title.toLowerCase().includes(search) ||
+      pkg.location.toLowerCase().includes(search)
+    );
+
+    // Sort
+    if (sort === 'price_asc') filtered.sort((a, b) => a.price - b.price);
+    if (sort === 'price_desc') filtered.sort((a, b) => b.price - a.price);
+    if (sort === 'rating') filtered.sort((a, b) => (b.rating || 4.5) - (a.rating || 4.5));
+
+    renderPackages(filtered);
+  }
+
+  loadPackages();
+</script>
+
+</body>
+</html>

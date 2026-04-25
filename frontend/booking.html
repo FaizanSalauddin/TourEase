@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Package – TourEase</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">✈</div>
+      Tour<span>Ease</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="packages.html">Packages</a></li>
+      <li><a href="my-bookings.html">My Bookings</a></li>
+    </ul>
+    <div class="nav-actions" id="navActions"></div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>Book Your Tour</h1>
+  <p>Fill in your details to confirm your booking</p>
+</div>
+
+<!-- BOOKING CONTENT -->
+<section class="booking-page">
+  <div class="container">
+
+    <!-- Success Screen (shown after booking) -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">🎉</div>
+      <h2>Booking Confirmed!</h2>
+      <p>Your tour has been booked successfully. We'll send details to your email soon.</p>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <a href="my-bookings.html" class="btn-primary" style="display:inline-block; padding:12px 28px;">View My Bookings</a>
+        <a href="packages.html" class="btn-outline" style="display:inline-block; padding:12px 28px;">Browse More</a>
+      </div>
+    </div>
+
+    <!-- Booking Form -->
+    <div class="booking-container" id="bookingContainer">
+
+      <!-- Form Card -->
+      <div class="booking-form-card">
+        <h2>Traveller Details</h2>
+
+        <div id="alertMsg" class="alert"></div>
+
+        <form id="bookingForm" onsubmit="handleBooking(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fullName">Full Name *</label>
+              <input type="text" id="fullName" placeholder="Enter your full name" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" placeholder="your@email.com" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input type="tel" id="phone" placeholder="+91 XXXXX XXXXX" required />
+            </div>
+            <div class="form-group">
+              <label for="persons">Number of Persons *</label>
+              <input type="number" id="persons" min="1" max="20" value="1" required
+                     oninput="updateTotal()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="travelDate">Travel Date *</label>
+            <input type="date" id="travelDate" required />
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn-primary btn-full" style="margin-top:8px; padding:14px; font-size:1rem;">
+            Confirm Booking
+          </button>
+        </form>
+      </div>
+
+      <!-- Package Summary Card -->
+      <div class="booking-summary" id="bookingSummary">
+        <div class="loading" style="padding:40px;">
+          <div class="spinner"></div>
+          <p>Loading package...</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>✈ TourEase</h3>
+        <p>Making travel simple, memorable, and affordable for everyone.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="packages.html">Packages</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <div class="contact-info">
+          <span>📞 +91 98765 43210</span>
+          <span>✉ hello@tourease.in</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 TourEase. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/utils.js"></script>
+<script>
+  let currentPackage = null;
+
+  // Redirect to login if not logged in
+  if (!isLoggedIn()) {
+    const id = getQueryParam('id');
+    window.location.href = `login.html?redirect=booking.html?id=${id}`;
+  }
+
+  // Set minimum travel date to today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('travelDate').min = today;
+
+  // Pre-fill email from logged-in user
+  const user = getCurrentUser();
+  if (user) {
+    document.getElementById('email').value = user.email;
+    document.getElementById('fullName').value = user.name;
+  }
+
+  // Load package details for summary card
+  async function loadPackage() {
+    const packageId = getQueryParam('id');
+    if (!packageId) {
+      window.location.href = 'packages.html';
+      return;
+    }
+
+    try {
+      currentPackage = await apiRequest(`/packages/${packageId}`);
+      renderSummary(currentPackage);
+    } catch (err) {
+      document.getElementById('bookingSummary').innerHTML = `
+        <div class="empty-state" style="padding:40px;">
+          <div class="icon">⚠</div>
+          <h3>Package not found</h3>
+          <a href="packages.html" class="btn-primary" style="display:inline-block; margin-top:12px;">Go Back</a>
+        </div>`;
+    }
+  }
+
+  // Render the package summary sidebar
+  function renderSummary(pkg) {
+    const persons = parseInt(document.getElementById('persons').value) || 1;
+    const total = pkg.price * persons;
+
+    document.getElementById('bookingSummary').innerHTML = `
+      <img src="${pkg.image}" alt="${pkg.title}"
+           onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80'" />
+      <div class="booking-summary-body">
+        <h3>${pkg.title}</h3>
+        <div class="summary-row">
+          <span>📍 Location</span>
+          <span>${pkg.location}</span>
+        </div>
+        <div class="summary-row">
+          <span>🕐 Duration</span>
+          <span>${pkg.duration}</span>
+        </div>
+        <div class="summary-row">
+          <span>💰 Price/Person</span>
+          <span>${formatPrice(pkg.price)}</span>
+        </div>
+        <div class="summary-row">
+          <span>👥 Persons</span>
+          <span id="summaryPersons">${persons}</span>
+        </div>
+        <div class="summary-total">
+          <span>Total Amount</span>
+          <span id="summaryTotal" style="color:var(--primary);">${formatPrice(total)}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // Update total price when persons count changes
+  function updateTotal() {
+    if (!currentPackage) return;
+    const persons = parseInt(document.getElementById('persons').value) || 1;
+    const total = currentPackage.price * persons;
+
+    const summaryPersons = document.getElementById('summaryPersons');
+    const summaryTotal = document.getElementById('summaryTotal');
+    if (summaryPersons) summaryPersons.textContent = persons;
+    if (summaryTotal) summaryTotal.textContent = formatPrice(total);
+  }
+
+  // Handle booking form submission
+  async function handleBooking(e) {
+    e.preventDefault();
+    hideAlert('alertMsg');
+
+    if (!currentPackage) {
+      showError('alertMsg', 'Package not loaded. Please refresh and try again.');
+      return;
+    }
+
+    const name = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const persons = parseInt(document.getElementById('persons').value);
+    const date = document.getElementById('travelDate').value;
+    const btn = document.getElementById('submitBtn');
+
+    // Validate
+    if (!name || !email || !phone || !persons || !date) {
+      showError('alertMsg', 'Please fill all required fields');
+      return;
+    }
+
+    btn.textContent = 'Confirming booking...';
+    btn.disabled = true;
+
+    try {
+      await apiRequest('/bookings', 'POST', {
+        packageId: currentPackage._id,
+        name, email, phone, persons, date
+      });
+
+      // Show success screen
+      document.getElementById('bookingContainer').style.display = 'none';
+      document.getElementById('successScreen').classList.add('show');
+
+    } catch (err) {
+      showError('alertMsg', err.message);
+      btn.textContent = 'Confirm Booking';
+      btn.disabled = false;
+    }
+  }
+
+  loadPackage();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Package Details – TourEase</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">✈</div>
+      Tour<span>Ease</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="packages.html">Packages</a></li>
+      <li><a href="my-bookings.html">My Bookings</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions" id="navActions"></div>
+  </div>
+</nav>
+
+<!-- PAGE CONTENT -->
+<div style="padding-top:70px;">
+  <!-- Loading State -->
+  <div id="loadingState" class="loading" style="padding:120px 24px;">
+    <div class="spinner"></div>
+    <p>Loading package details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div id="errorState" style="display:none;" class="empty-state" style="padding:120px 24px;">
+    <div class="icon">⚠</div>
+    <h3>Package not found</h3>
+    <p>This package may have been removed or the link is incorrect.</p>
+    <a href="packages.html" class="btn-primary" style="display:inline-block; margin-top:16px;">Browse Packages</a>
+  </div>
+
+  <!-- Package Details -->
+  <div id="packageDetails" style="display:none;">
+
+    <!-- Hero Image Banner -->
+    <div id="detailBanner" style="height:420px; overflow:hidden; position:relative;">
+      <img id="bannerImg" src="" alt="" style="width:100%; height:100%; object-fit:cover;" />
+      <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%);"></div>
+      <div style="position:absolute; bottom:32px; left:50%; transform:translateX(-50%); color:white; text-align:center; width:90%;">
+        <h1 id="bannerTitle" style="font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,3rem); margin-bottom:8px;"></h1>
+        <p id="bannerMeta" style="opacity:0.85; font-size:1rem;"></p>
+      </div>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div style="background:var(--bg-light); border-bottom:1px solid var(--border); padding:12px 24px;">
+      <div class="container">
+        <span style="font-size:0.85rem; color:var(--text-light);">
+          <a href="index.html" style="color:var(--primary);">Home</a> /
+          <a href="packages.html" style="color:var(--primary);">Packages</a> /
+          <span id="breadcrumbTitle"></span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <section class="detail-page">
+      <div class="container">
+        <div class="detail-grid">
+
+          <!-- Left: Details -->
+          <div>
+            <h2 id="detailTitle" class="detail-title"></h2>
+            <div class="detail-meta" id="detailMeta"></div>
+            <p id="detailDesc" style="color:var(--text-mid); line-height:1.8; font-size:1rem; margin-bottom:28px;"></p>
+
+            <!-- Tabs -->
+            <div class="detail-tabs">
+              <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchTab('itinerary', this)">Itinerary</button>
+                <button class="tab-btn" onclick="switchTab('hotel', this)">Hotel Info</button>
+                <button class="tab-btn" onclick="switchTab('included', this)">Included / Excluded</button>
+              </div>
+
+              <!-- Itinerary Tab -->
+              <div class="tab-content active" id="tab-itinerary">
+                <p id="itineraryText" style="color:var(--text-mid); line-height:1.8; white-space:pre-line;"></p>
+              </div>
+
+              <!-- Hotel Tab -->
+              <div class="tab-content" id="tab-hotel">
+                <p id="hotelText" style="color:var(--text-mid); line-height:1.8;"></p>
+              </div>
+
+              <!-- Included/Excluded Tab -->
+              <div class="tab-content" id="tab-included">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+                  <div>
+                    <h4 style="color:#16a34a; margin-bottom:12px; font-size:1rem;">✓ Included</h4>
+                    <ul class="included-list" id="includedList"></ul>
+                  </div>
+                  <div>
+                    <h4 style="color:#dc2626; margin-bottom:12px; font-size:1rem;">✗ Excluded</h4>
+                    <ul class="included-list excluded-list" id="excludedList"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Booking Card -->
+          <div>
+            <div class="booking-card-sticky">
+              <h3>Book This Package</h3>
+              <div class="price-big">
+                <span id="cardPrice"></span>
+                <small> / person</small>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px; font-size:0.9rem; color:var(--text-mid);">
+                <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border);">
+                  <span>📍 Location</span>
+                  <span id="cardLocation" style="font-weight:600; color:var(--text-dark);"></span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border);">
+                  <span>🕐 Duration</span>
+                  <span id="cardDuration" style="font-weight:600; color:var(--text-dark);"></span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border);">
+                  <span>⭐ Rating</span>
+                  <span id="cardRating" style="font-weight:600; color:var(--secondary);"></span>
+                </div>
+              </div>
+              <a id="bookNowBtn" href="#" class="btn-primary btn-full" style="text-align:center; display:block; padding:14px; font-size:1rem;">
+                Book Now
+              </a>
+              <p style="font-size:0.8rem; color:var(--text-light); text-align:center; margin-top:12px;">
+                No payment required now. Confirm your booking first.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>✈ TourEase</h3>
+        <p>Making travel simple, memorable, and affordable for everyone.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="packages.html">Packages</a></li>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="register.html">Register</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Destinations</h4>
+        <ul>
+          <li><a href="#">Goa</a></li>
+          <li><a href="#">Rajasthan</a></li>
+          <li><a href="#">Kerala</a></li>
+          <li><a href="#">Manali</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <div class="contact-info">
+          <span>📍 123 Travel Street, Mumbai, India</span>
+          <span>📞 +91 98765 43210</span>
+          <span>✉ hello@tourease.in</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 TourEase. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/utils.js"></script>
+<script>
+  // Switch between detail tabs
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Load package details from API
+  async function loadPackageDetails() {
+    const packageId = getQueryParam('id');
+    if (!packageId) {
+      showError();
+      return;
+    }
+
+    try {
+      const pkg = await apiRequest(`/packages/${packageId}`);
+      renderPackage(pkg);
+    } catch (err) {
+      showError();
+    }
+  }
+
+  function showError() {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('errorState').style.display = 'block';
+  }
+
+  function renderPackage(pkg) {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('packageDetails').style.display = 'block';
+
+    // Banner
+    document.getElementById('bannerImg').src = pkg.image;
+    document.getElementById('bannerImg').alt = pkg.title;
+    document.getElementById('bannerTitle').textContent = pkg.title;
+    document.getElementById('bannerMeta').textContent = `📍 ${pkg.location}  •  🕐 ${pkg.duration}`;
+    document.getElementById('breadcrumbTitle').textContent = pkg.title;
+
+    // Main details
+    document.getElementById('detailTitle').textContent = pkg.title;
+    document.getElementById('detailDesc').textContent = pkg.description;
+    document.getElementById('detailMeta').innerHTML = `
+      <span>📍 ${pkg.location}</span>
+      <span>🕐 ${pkg.duration}</span>
+      <span>⭐ ${pkg.rating || 4.5} Rating</span>
+      <span>💰 ${formatPrice(pkg.price)} / person</span>
+    `;
+
+    // Tabs
+    document.getElementById('itineraryText').textContent =
+      pkg.itinerary || 'Detailed itinerary will be shared upon booking confirmation.';
+    document.getElementById('hotelText').textContent =
+      pkg.hotel || 'Hotel details will be confirmed based on availability at time of booking.';
+
+    // Included / Excluded
+    const included = pkg.included && pkg.included.length > 0
+      ? pkg.included
+      : ['Hotel accommodation', 'Daily breakfast', 'Sightseeing', 'Transportation', 'Tour guide'];
+    const excluded = pkg.excluded && pkg.excluded.length > 0
+      ? pkg.excluded
+      : ['Airfare', 'Personal expenses', 'Travel insurance', 'Lunch & dinner'];
+
+    document.getElementById('includedList').innerHTML =
+      included.map(i => `<li>${i}</li>`).join('');
+    document.getElementById('excludedList').innerHTML =
+      excluded.map(i => `<li>${i}</li>`).join('');
+
+    // Booking card
+    document.getElementById('cardPrice').textContent = formatPrice(pkg.price);
+    document.getElementById('cardLocation').textContent = pkg.location;
+    document.getElementById('cardDuration').textContent = pkg.duration;
+    document.getElementById('cardRating').textContent = `★ ${pkg.rating || 4.5}`;
+
+    // Book now button — redirect to booking page with package ID
+    const bookBtn = document.getElementById('bookNowBtn');
+    if (isLoggedIn()) {
+      bookBtn.href = `booking.html?id=${pkg._id}`;
+    } else {
+      bookBtn.href = `login.html?redirect=booking.html?id=${pkg._id}`;
+      bookBtn.title = 'Login to book this package';
+    }
+
+    // Set page title
+    document.title = `${pkg.title} – TourEase`;
+  }
+
+  loadPackageDetails();
+</script>
+
+</body>
+</html>

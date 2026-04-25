@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Bookings – TourEase</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">✈</div>
+      Tour<span>Ease</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="packages.html">Packages</a></li>
+      <li><a href="my-bookings.html" class="active">My Bookings</a></li>
+    </ul>
+    <div class="nav-actions" id="navActions"></div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>My Bookings</h1>
+  <p>All your tour bookings in one place</p>
+</div>
+
+<!-- BOOKINGS CONTENT -->
+<section class="section">
+  <div class="container">
+
+    <!-- Loading State -->
+    <div id="loadingState" class="loading">
+      <div class="spinner"></div>
+      <p>Loading your bookings...</p>
+    </div>
+
+    <!-- Bookings List -->
+    <div id="bookingsList" class="bookings-list" style="display:none;"></div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="empty-state" style="display:none;">
+      <div class="icon">🧳</div>
+      <h3>No bookings yet</h3>
+      <p>You haven't booked any tour yet. Start exploring!</p>
+      <a href="packages.html" class="btn-primary" style="display:inline-block; margin-top:20px; padding:12px 28px;">
+        Browse Packages
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>✈ TourEase</h3>
+        <p>Making travel simple, memorable, and affordable for everyone.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="packages.html">Packages</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <div class="contact-info">
+          <span>📞 +91 98765 43210</span>
+          <span>✉ hello@tourease.in</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 TourEase. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/utils.js"></script>
+<script>
+  // Redirect to login if not logged in
+  if (!isLoggedIn()) {
+    window.location.href = 'login.html';
+  }
+
+  // Load user's bookings from API
+  async function loadMyBookings() {
+    try {
+      const bookings = await apiRequest('/bookings/my');
+
+      document.getElementById('loadingState').style.display = 'none';
+
+      if (bookings.length === 0) {
+        document.getElementById('emptyState').style.display = 'block';
+        return;
+      }
+
+      const list = document.getElementById('bookingsList');
+      list.style.display = 'flex';
+
+      list.innerHTML = bookings.map(booking => {
+        const pkg = booking.packageId;
+        const statusClass = `status-${booking.status}`;
+        return `
+          <div class="booking-item">
+            <img
+              src="${pkg ? pkg.image : ''}"
+              alt="${pkg ? pkg.title : 'Package'}"
+              onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80'"
+            />
+            <div class="booking-info">
+              <h3>${pkg ? pkg.title : 'Package Unavailable'}</h3>
+              <p>📍 ${pkg ? pkg.location : '–'} &nbsp;|&nbsp; 🕐 ${pkg ? pkg.duration : '–'}</p>
+              <p style="margin-top:6px;">
+                👤 ${booking.name} &nbsp;|&nbsp;
+                📅 ${formatDate(booking.date)} &nbsp;|&nbsp;
+                👥 ${booking.persons} person${booking.persons > 1 ? 's' : ''}
+              </p>
+              <p style="margin-top:6px; font-weight:600; color:var(--primary);">
+                Total: ${formatPrice(booking.totalPrice)}
+              </p>
+            </div>
+            <div style="text-align:right; display:flex; flex-direction:column; gap:12px; align-items:flex-end;">
+              <span class="booking-status ${statusClass}">
+                ${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+              </span>
+              <span style="font-size:0.8rem; color:var(--text-light);">
+                Booked on ${formatDate(booking.createdAt)}
+              </span>
+              ${pkg ? `<a href="details.html?id=${pkg._id}" class="btn-outline" style="font-size:0.82rem; padding:6px 14px;">View Package</a>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+    } catch (err) {
+      document.getElementById('loadingState').innerHTML = `
+        <div class="empty-state">
+          <div class="icon">⚠</div>
+          <h3>Failed to load bookings</h3>
+          <p>${err.message}</p>
+        </div>`;
+    }
+  }
+
+  loadMyBookings();
+</script>
+
+</body>
+</html>

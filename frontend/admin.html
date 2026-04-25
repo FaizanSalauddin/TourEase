@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard – TourEase</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">✈</div>
+      Tour<span>Ease</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="packages.html">Packages</a></li>
+      <li><a href="admin.html" class="active">Admin</a></li>
+    </ul>
+    <div class="nav-actions" id="navActions"></div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>⚙ Admin Dashboard</h1>
+  <p>Manage tour packages and view all bookings</p>
+</div>
+
+<!-- ADMIN CONTENT -->
+<section class="admin-page">
+  <div class="container">
+
+    <!-- Access Denied (shown if not admin) -->
+    <div id="accessDenied" class="empty-state" style="display:none; padding:80px 24px;">
+      <div class="icon">🔒</div>
+      <h3>Access Denied</h3>
+      <p>You must be an admin to access this page.</p>
+      <a href="index.html" class="btn-primary" style="display:inline-block; margin-top:20px; padding:12px 28px;">Go Home</a>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" style="display:none;">
+
+      <!-- Summary Cards -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; margin-bottom:36px;">
+        <div style="background:white; border-radius:14px; padding:24px; box-shadow:var(--shadow); border:1px solid var(--border); text-align:center;">
+          <div style="font-size:2rem; margin-bottom:8px;">📦</div>
+          <div id="totalPackages" style="font-size:1.8rem; font-weight:700; color:var(--primary);">–</div>
+          <div style="font-size:0.85rem; color:var(--text-light);">Total Packages</div>
+        </div>
+        <div style="background:white; border-radius:14px; padding:24px; box-shadow:var(--shadow); border:1px solid var(--border); text-align:center;">
+          <div style="font-size:2rem; margin-bottom:8px;">🎫</div>
+          <div id="totalBookings" style="font-size:1.8rem; font-weight:700; color:var(--primary);">–</div>
+          <div style="font-size:0.85rem; color:var(--text-light);">Total Bookings</div>
+        </div>
+        <div style="background:white; border-radius:14px; padding:24px; box-shadow:var(--shadow); border:1px solid var(--border); text-align:center;">
+          <div style="font-size:2rem; margin-bottom:8px;">💰</div>
+          <div id="totalRevenue" style="font-size:1.8rem; font-weight:700; color:var(--primary);">–</div>
+          <div style="font-size:0.85rem; color:var(--text-light);">Total Revenue</div>
+        </div>
+      </div>
+
+      <!-- Tab Buttons -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchAdminTab('packages', this)">📦 Manage Packages</button>
+        <button class="admin-tab" onclick="switchAdminTab('bookings', this)">🎫 View Bookings</button>
+      </div>
+
+      <!-- PACKAGES TAB -->
+      <div class="admin-section active" id="tab-packages">
+        <div class="admin-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+            <h3 style="margin-bottom:0; padding-bottom:0; border:none;">All Tour Packages</h3>
+            <button class="btn-primary" onclick="openAddModal()" style="padding:10px 22px;">
+              + Add New Package
+            </button>
+          </div>
+          <div id="packagesTable">
+            <div class="loading"><div class="spinner"></div><p>Loading...</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOKINGS TAB -->
+      <div class="admin-section" id="tab-bookings">
+        <div class="admin-card">
+          <h3>All Bookings</h3>
+          <div id="bookingsTable">
+            <div class="loading"><div class="spinner"></div><p>Loading...</p></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ADD/EDIT PACKAGE MODAL ==================== -->
+<div class="modal-overlay" id="packageModal">
+  <div class="modal">
+    <h3 id="modalTitle">Add New Package</h3>
+    <div id="modalAlert" class="alert"></div>
+
+    <form id="packageForm" onsubmit="handlePackageSubmit(event)">
+      <input type="hidden" id="editPackageId" />
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Package Title *</label>
+          <input type="text" id="pkgTitle" placeholder="e.g. Goa Beach Delight" required />
+        </div>
+        <div class="form-group">
+          <label>Location *</label>
+          <input type="text" id="pkgLocation" placeholder="e.g. Goa, India" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Duration *</label>
+          <input type="text" id="pkgDuration" placeholder="e.g. 5 Days / 4 Nights" required />
+        </div>
+        <div class="form-group">
+          <label>Price per Person (₹) *</label>
+          <input type="number" id="pkgPrice" placeholder="e.g. 15000" min="0" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Image URL *</label>
+        <input type="url" id="pkgImage" placeholder="https://... (paste an image URL)" required />
+      </div>
+      <div class="form-group">
+        <label>Description *</label>
+        <textarea id="pkgDescription" rows="3" placeholder="Brief description of the tour..." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Itinerary</label>
+        <textarea id="pkgItinerary" rows="3" placeholder="Day 1: Arrival...&#10;Day 2: Sightseeing..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Hotel Info</label>
+        <input type="text" id="pkgHotel" placeholder="e.g. 3-star hotel near beach" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Included (comma separated)</label>
+          <input type="text" id="pkgIncluded" placeholder="Hotel, Breakfast, Sightseeing" />
+        </div>
+        <div class="form-group">
+          <label>Excluded (comma separated)</label>
+          <input type="text" id="pkgExcluded" placeholder="Airfare, Lunch, Insurance" />
+        </div>
+      </div>
+      <div class="form-group" style="display:flex; align-items:center; gap:10px;">
+        <input type="checkbox" id="pkgFeatured" style="width:auto;" />
+        <label for="pkgFeatured" style="margin:0; cursor:pointer;">Mark as Featured (shown on homepage)</label>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-outline" onclick="closeModal()">Cancel</button>
+        <button type="submit" id="modalSubmitBtn" class="btn-primary">Add Package</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-bottom" style="padding:20px 0; border:none;">
+      <p>© 2024 TourEase Admin Panel</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/utils.js"></script>
+<script>
+  let allPackagesAdmin = [];
+  let allBookingsAdmin = [];
+
+  // Check admin access on page load
+  function checkAdminAccess() {
+    if (!isLoggedIn() || !isAdmin()) {
+      document.getElementById('accessDenied').style.display = 'block';
+    } else {
+      document.getElementById('adminPanel').style.display = 'block';
+      loadPackages();
+      loadBookings();
+    }
+  }
+
+  // Switch admin tabs
+  function switchAdminTab(tabId, btn) {
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Load all packages for admin table
+  async function loadPackages() {
+    try {
+      allPackagesAdmin = await apiRequest('/packages');
+      document.getElementById('totalPackages').textContent = allPackagesAdmin.length;
+      renderPackagesTable(allPackagesAdmin);
+    } catch (err) {
+      document.getElementById('packagesTable').innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+    }
+  }
+
+  // Render packages table
+  function renderPackagesTable(packages) {
+    if (packages.length === 0) {
+      document.getElementById('packagesTable').innerHTML = `
+        <div class="empty-state"><div class="icon">📦</div><h3>No packages yet</h3><p>Click "Add New Package" to get started.</p></div>`;
+      return;
+    }
+
+    document.getElementById('packagesTable').innerHTML = `
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Title</th>
+              <th>Location</th>
+              <th>Duration</th>
+              <th>Price</th>
+              <th>Featured</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${packages.map(pkg => `
+              <tr>
+                <td><img src="${pkg.image}" alt="${pkg.title}"
+                     onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=200&q=60'" /></td>
+                <td><strong>${pkg.title}</strong></td>
+                <td>${pkg.location}</td>
+                <td>${pkg.duration}</td>
+                <td>${formatPrice(pkg.price)}</td>
+                <td>${pkg.featured ? '⭐ Yes' : '–'}</td>
+                <td>
+                  <div class="action-btns">
+                    <button class="btn-sm btn-edit" onclick="openEditModal('${pkg._id}')">✏ Edit</button>
+                    <button class="btn-sm btn-delete" onclick="deletePackage('${pkg._id}', '${pkg.title}')">🗑 Delete</button>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  // Load all bookings for admin
+  async function loadBookings() {
+    try {
+      allBookingsAdmin = await apiRequest('/bookings/all');
+      document.getElementById('totalBookings').textContent = allBookingsAdmin.length;
+
+      // Calculate total revenue
+      const revenue = allBookingsAdmin.reduce((sum, b) => sum + (b.totalPrice || 0), 0);
+      document.getElementById('totalRevenue').textContent = formatPrice(revenue);
+
+      renderBookingsTable(allBookingsAdmin);
+    } catch (err) {
+      document.getElementById('bookingsTable').innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+    }
+  }
+
+  // Render bookings table
+  function renderBookingsTable(bookings) {
+    if (bookings.length === 0) {
+      document.getElementById('bookingsTable').innerHTML = `
+        <div class="empty-state"><div class="icon">🎫</div><h3>No bookings yet</h3></div>`;
+      return;
+    }
+
+    document.getElementById('bookingsTable').innerHTML = `
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Traveller</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Package</th>
+              <th>Date</th>
+              <th>Persons</th>
+              <th>Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${bookings.map(b => `
+              <tr>
+                <td><strong>${b.name}</strong></td>
+                <td>${b.email}</td>
+                <td>${b.phone}</td>
+                <td>${b.packageId ? b.packageId.title : '–'}</td>
+                <td>${formatDate(b.date)}</td>
+                <td>${b.persons}</td>
+                <td><strong>${formatPrice(b.totalPrice)}</strong></td>
+                <td><span class="booking-status status-${b.status}">${b.status}</span></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  // ==================== MODAL LOGIC ====================
+
+  function openAddModal() {
+    document.getElementById('modalTitle').textContent = 'Add New Package';
+    document.getElementById('modalSubmitBtn').textContent = 'Add Package';
+    document.getElementById('editPackageId').value = '';
+    document.getElementById('packageForm').reset();
+    hideAlert('modalAlert');
+    document.getElementById('packageModal').classList.add('open');
+  }
+
+  function openEditModal(packageId) {
+    const pkg = allPackagesAdmin.find(p => p._id === packageId);
+    if (!pkg) return;
+
+    document.getElementById('modalTitle').textContent = 'Edit Package';
+    document.getElementById('modalSubmitBtn').textContent = 'Update Package';
+    document.getElementById('editPackageId').value = pkg._id;
+
+    // Fill form with current values
+    document.getElementById('pkgTitle').value = pkg.title;
+    document.getElementById('pkgLocation').value = pkg.location;
+    document.getElementById('pkgDuration').value = pkg.duration;
+    document.getElementById('pkgPrice').value = pkg.price;
+    document.getElementById('pkgImage').value = pkg.image;
+    document.getElementById('pkgDescription').value = pkg.description;
+    document.getElementById('pkgItinerary').value = pkg.itinerary || '';
+    document.getElementById('pkgHotel').value = pkg.hotel || '';
+    document.getElementById('pkgIncluded').value = (pkg.included || []).join(', ');
+    document.getElementById('pkgExcluded').value = (pkg.excluded || []).join(', ');
+    document.getElementById('pkgFeatured').checked = pkg.featured || false;
+
+    hideAlert('modalAlert');
+    document.getElementById('packageModal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('packageModal').classList.remove('open');
+  }
+
+  // Close modal on outside click
+  document.getElementById('packageModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // Handle add/edit package form submit
+  async function handlePackageSubmit(e) {
+    e.preventDefault();
+    hideAlert('modalAlert');
+
+    const editId = document.getElementById('editPackageId').value;
+    const btn = document.getElementById('modalSubmitBtn');
+
+    // Build package data from form
+    const data = {
+      title: document.getElementById('pkgTitle').value.trim(),
+      location: document.getElementById('pkgLocation').value.trim(),
+      duration: document.getElementById('pkgDuration').value.trim(),
+      price: parseFloat(document.getElementById('pkgPrice').value),
+      image: document.getElementById('pkgImage').value.trim(),
+      description: document.getElementById('pkgDescription').value.trim(),
+      itinerary: document.getElementById('pkgItinerary').value.trim(),
+      hotel: document.getElementById('pkgHotel').value.trim(),
+      included: document.getElementById('pkgIncluded').value.split(',').map(s => s.trim()).filter(Boolean),
+      excluded: document.getElementById('pkgExcluded').value.split(',').map(s => s.trim()).filter(Boolean),
+      featured: document.getElementById('pkgFeatured').checked
+    };
+
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    try {
+      if (editId) {
+        await apiRequest(`/packages/${editId}`, 'PUT', data);
+      } else {
+        await apiRequest('/packages', 'POST', data);
+      }
+
+      closeModal();
+      await loadPackages(); // Refresh table
+    } catch (err) {
+      showError('modalAlert', err.message);
+      btn.disabled = false;
+      btn.textContent = editId ? 'Update Package' : 'Add Package';
+    }
+  }
+
+  // Delete package with confirmation
+  async function deletePackage(packageId, title) {
+    if (!confirm(`Are you sure you want to delete "${title}"? This cannot be undone.`)) return;
+
+    try {
+      await apiRequest(`/packages/${packageId}`, 'DELETE');
+      await loadPackages(); // Refresh table
+    } catch (err) {
+      alert('Error deleting package: ' + err.message);
+    }
+  }
+
+  // Initialize admin page
+  checkAdminAccess();
+</script>
+
+</body>
+</html>

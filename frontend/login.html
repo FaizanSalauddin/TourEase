@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login – TourEase</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">✈</div>
+      Tour<span>Ease</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="packages.html">Packages</a></li>
+    </ul>
+    <div class="nav-actions" id="navActions"></div>
+  </div>
+</nav>
+
+<!-- LOGIN FORM -->
+<div class="auth-page">
+  <div class="auth-card">
+    <div style="text-align:center; margin-bottom:28px;">
+      <div style="font-size:2.5rem; margin-bottom:12px;">✈</div>
+      <h2>Welcome Back!</h2>
+      <p>Login to your TourEase account</p>
+    </div>
+
+    <div id="alertMsg" class="alert"></div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="you@example.com" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required />
+      </div>
+      <button type="submit" id="submitBtn" class="btn-primary btn-full" style="margin-top:8px;">
+        Login
+      </button>
+    </form>
+
+    <div class="auth-switch">
+      Don't have an account? <a href="register.html">Register here</a>
+    </div>
+
+    <!-- Demo credentials hint -->
+    <div style="margin-top:20px; padding:14px; background:var(--primary-light);
+                border-radius:10px; font-size:0.82rem; color:var(--text-mid);">
+      <strong>Admin Demo:</strong> admin@tourease.in / admin123<br>
+      Register a new account to try user features.
+    </div>
+  </div>
+</div>
+
+<script src="js/utils.js"></script>
+<script>
+  // Redirect if already logged in
+  if (isLoggedIn()) {
+    window.location.href = 'index.html';
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    hideAlert('alertMsg');
+
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btn = document.getElementById('submitBtn');
+
+    // Disable button while loading
+    btn.textContent = 'Logging in...';
+    btn.disabled = true;
+
+    try {
+      const data = await apiRequest('/users/login', 'POST', { email, password });
+      saveAuth(data); // Save token and user info
+
+      showSuccess('alertMsg', 'Login successful! Redirecting...');
+
+      // Check if there is a redirect URL in query params
+      const redirect = getQueryParam('redirect');
+      setTimeout(() => {
+        window.location.href = redirect || 'index.html';
+      }, 800);
+
+    } catch (err) {
+      showError('alertMsg', err.message);
+      btn.textContent = 'Login';
+      btn.disabled = false;
+    }
+  }
+</script>
+
+</body>
+</html>
