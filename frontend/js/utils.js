@@ -1,7 +1,8 @@
 // js/utils.js
-// Shared utility functions used across all pages
+// Shared utility functions used across all pages (ENHANCED)
 
-const API_BASE = 'https://tourease-backend-5xx6.onrender.com/api';
+// const API_BASE = 'https://tourease-backend-5xx6.onrender.com/api';
+const API_BASE = 'http://localhost:5000/api';
 
 // ==================== AUTH HELPERS ====================
 
@@ -37,7 +38,10 @@ function isAdmin() {
 function logout() {
   localStorage.removeItem('tourease_token');
   localStorage.removeItem('tourease_user');
-  window.location.href = 'login.html';
+  showToast('Logged out successfully', 'success');
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 500);
 }
 
 // ==================== API HELPERS ====================
@@ -74,6 +78,8 @@ function showError(elementId, message) {
     el.textContent = message;
     el.style.display = 'block';
     el.className = 'alert alert-error';
+    // Auto-hide after 5 seconds
+    setTimeout(() => hideAlert(elementId), 5000);
   }
 }
 
@@ -84,6 +90,8 @@ function showSuccess(elementId, message) {
     el.textContent = message;
     el.style.display = 'block';
     el.className = 'alert alert-success';
+    // Auto-hide after 5 seconds
+    setTimeout(() => hideAlert(elementId), 5000);
   }
 }
 
@@ -91,6 +99,19 @@ function showSuccess(elementId, message) {
 function hideAlert(elementId) {
   const el = document.getElementById(elementId);
   if (el) el.style.display = 'none';
+}
+
+// Show toast notification
+function showToast(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.animation = 'slideInRight 0.3s ease reverse';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
 }
 
 // Format price in Indian Rupees
@@ -120,15 +141,15 @@ function setupNavbar() {
 
   if (user) {
     navActionsEl.innerHTML = `
-      <span style="font-size:0.9rem; color:var(--text-mid)">Hi, ${user.name.split(' ')[0]}</span>
-      <a href="my-bookings.html" class="btn-outline">My Bookings</a>
-      ${user.isAdmin ? '<a href="admin.html" class="btn-outline">Admin</a>' : ''}
-      <button onclick="logout()" class="btn-primary">Logout</button>
+      <span style="font-size:0.9rem; color:var(--text-mid)">👋 Hi, ${user.name.split(' ')[0]}</span>
+      <a href="my-bookings.html" class="btn-outline">📋 My Bookings</a>
+      ${user.isAdmin ? '<a href="admin.html" class="btn-outline">⚙ Admin</a>' : ''}
+      <button onclick="logout()" class="btn-primary">🚪 Logout</button>
     `;
   } else {
     navActionsEl.innerHTML = `
-      <a href="login.html" class="btn-outline">Login</a>
-      <a href="register.html" class="btn-primary">Register</a>
+      <a href="login.html" class="btn-outline">🔑 Login</a>
+      <a href="register.html" class="btn-primary">📝 Register</a>
     `;
   }
 }

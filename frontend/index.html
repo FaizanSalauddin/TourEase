@@ -1,302 +1,338 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TourEase – Simple Tour Booking System</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
+
 <body>
 
-<!-- ==================== NAVBAR ==================== -->
-<nav class="navbar">
-  <div class="nav-inner">
-    <a href="index.html" class="nav-logo">
-      <div class="nav-logo-icon">✈</div>
-      Tour<span>Ease</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="packages.html">Packages</a></li>
-      <li><a href="my-bookings.html">My Bookings</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <div class="nav-actions" id="navActions"></div>
-  </div>
-</nav>
-
-<!-- ==================== HERO ==================== -->
-<section class="hero">
-  <div class="container">
-    <div class="hero-content">
-      <div class="hero-badge">
-        ✨ &nbsp; Explore the world with ease
-      </div>
-      <h1>
-        Discover Your Next <span>Dream</span> Destination
-      </h1>
-      <p>
-        Book curated tour packages to the most beautiful destinations in India and abroad. 
-        Simple booking, unforgettable experiences.
-      </p>
-      <div class="hero-btns">
-        <a href="packages.html" class="btn-hero-primary">Explore Packages</a>
-        <a href="#destinations" class="btn-hero-outline">View Destinations</a>
-      </div>
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <h3>50+</h3>
-          <p>Tour Packages</p>
-        </div>
-        <div class="hero-stat">
-          <h3>1000+</h3>
-          <p>Happy Travellers</p>
-        </div>
-        <div class="hero-stat">
-          <h3>25+</h3>
-          <p>Destinations</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== DESTINATIONS ==================== -->
-<section class="section" id="destinations">
-  <div class="container">
-    <div class="section-title">
-      <span class="label">Popular Destinations</span>
-      <h2>Top Places to Visit</h2>
-      <p>Explore hand-picked destinations loved by thousands of travellers every year.</p>
-    </div>
-    <div class="destinations-grid">
-      <div class="destination-card">
-        <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600&q=80" alt="Goa" loading="lazy" />
-        <div class="destination-overlay">
-          <h3>Goa</h3>
-          <p>🏖 Beaches & Nightlife</p>
-        </div>
-      </div>
-      <div class="destination-card">
-        <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=600&q=80" alt="Rajasthan" loading="lazy" />
-        <div class="destination-overlay">
-          <h3>Rajasthan</h3>
-          <p>🏰 Forts & Culture</p>
-        </div>
-      </div>
-      <div class="destination-card">
-        <img src="https://images.unsplash.com/photo-1600100397608-4c1a7a25e6dd?w=600&q=80" alt="Kerala" loading="lazy" />
-        <div class="destination-overlay">
-          <h3>Kerala</h3>
-          <p>🌿 Backwaters & Nature</p>
-        </div>
-      </div>
-      <div class="destination-card">
-        <img src="https://images.unsplash.com/photo-1585236905122-4e33a5c5bfe0?w=600&q=80" alt="Manali" loading="lazy" />
-        <div class="destination-overlay">
-          <h3>Manali</h3>
-          <p>❄ Snow & Adventure</p>
-        </div>
-      </div>
-      <div class="destination-card">
-        <img src="https://images.unsplash.com/photo-1609920658906-8223bd289001?w=600&q=80" alt="Andaman" loading="lazy" />
-        <div class="destination-overlay">
-          <h3>Andaman</h3>
-          <p>🐠 Islands & Diving</p>
-        </div>
-      </div>
-      <div class="destination-card">
-        <img src="https://images.unsplash.com/photo-1562566566-09f02823d01b?w=600&q=80" alt="Varanasi" loading="lazy" />
-        <div class="destination-overlay">
-          <h3>Varanasi</h3>
-          <p>🕌 Spirituality & Heritage</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== FEATURED PACKAGES ==================== -->
-<section class="section section-alt">
-  <div class="container">
-    <div class="section-title">
-      <span class="label">Featured Packages</span>
-      <h2>Popular Tour Packages</h2>
-      <p>Our most loved tour packages with the best value for money.</p>
-    </div>
-    <!-- Packages loaded from API -->
-    <div class="packages-grid" id="featuredPackages">
-      <div class="loading">
-        <div class="spinner"></div>
-        <p>Loading packages...</p>
-      </div>
-    </div>
-    <div style="text-align:center; margin-top:40px;">
-      <a href="packages.html" class="btn-primary" style="padding:14px 36px; font-size:1rem; display:inline-block;">
-        View All Packages →
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-icon">✈</div>
+        Tour<span>Ease</span>
       </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="packages.html">Packages</a></li>
+        <li><a href="my-bookings.html">My Bookings</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-actions" id="navActions"></div>
     </div>
-  </div>
-</section>
+  </nav>
 
-<!-- ==================== WHY US ==================== -->
-<section class="section">
-  <div class="container">
-    <div class="section-title">
-      <span class="label">Why Choose Us</span>
-      <h2>The TourEase Advantage</h2>
-    </div>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:28px;">
-      <div style="text-align:center; padding:32px 24px;">
-        <div style="font-size:2.5rem; margin-bottom:16px;">🏅</div>
-        <h3 style="font-family:'Playfair Display',serif; margin-bottom:10px;">Best Price Guarantee</h3>
-        <p style="color:var(--text-light); font-size:0.9rem;">We offer the most competitive prices with no hidden charges.</p>
-      </div>
-      <div style="text-align:center; padding:32px 24px;">
-        <div style="font-size:2.5rem; margin-bottom:16px;">🛡</div>
-        <h3 style="font-family:'Playfair Display',serif; margin-bottom:10px;">Safe & Secure</h3>
-        <p style="color:var(--text-light); font-size:0.9rem;">Your safety is our top priority on every trip we plan.</p>
-      </div>
-      <div style="text-align:center; padding:32px 24px;">
-        <div style="font-size:2.5rem; margin-bottom:16px;">🎯</div>
-        <h3 style="font-family:'Playfair Display',serif; margin-bottom:10px;">Expert Guidance</h3>
-        <p style="color:var(--text-light); font-size:0.9rem;">Our travel experts curate every itinerary with care.</p>
-      </div>
-      <div style="text-align:center; padding:32px 24px;">
-        <div style="font-size:2.5rem; margin-bottom:16px;">📞</div>
-        <h3 style="font-family:'Playfair Display',serif; margin-bottom:10px;">24/7 Support</h3>
-        <p style="color:var(--text-light); font-size:0.9rem;">We are always here to help, before and during your trip.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== TESTIMONIALS ==================== -->
-<section class="section section-alt">
-  <div class="container">
-    <div class="section-title">
-      <span class="label">Testimonials</span>
-      <h2>What Our Travellers Say</h2>
-      <p>Real experiences shared by real travellers who explored the world with TourEase.</p>
-    </div>
-    <div class="testimonials-grid">
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p>"The Goa trip was absolutely amazing! Everything from hotel to sightseeing was perfectly organised. Will definitely book again."</p>
-        <div class="testimonial-user">
-          <div class="testimonial-avatar">A</div>
-          <div>
-            <h4>Arjun Mehta</h4>
-            <span>Goa Beach Package</span>
-          </div>
+  <!-- ==================== HERO ==================== -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          ✨ &nbsp; Explore the world with ease
         </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p>"Kerala backwaters tour was a dream come true. The houseboat stay was unforgettable. TourEase made it so simple to book!"</p>
-        <div class="testimonial-user">
-          <div class="testimonial-avatar">P</div>
-          <div>
-            <h4>Priya Sharma</h4>
-            <span>Kerala Backwaters Tour</span>
-          </div>
+        <h1>
+          Discover Your Next <span>Dream</span> Destination
+        </h1>
+        <p>
+          Book curated tour packages to the most beautiful destinations in India and abroad.
+          Simple booking, unforgettable experiences.
+        </p>
+        <div class="hero-btns">
+          <a href="packages.html" class="btn-hero-primary">Explore Packages</a>
+          <a href="#destinations" class="btn-hero-outline">View Destinations</a>
         </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="stars">★★★★☆</div>
-        <p>"Rajasthan heritage tour was well-planned. The forts and palaces were breathtaking. Good value for money and great service."</p>
-        <div class="testimonial-user">
-          <div class="testimonial-avatar">R</div>
-          <div>
-            <h4>Rohan Verma</h4>
-            <span>Rajasthan Heritage Tour</span>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <h3>50+</h3>
+            <p>Tour Packages</p>
+          </div>
+          <div class="hero-stat">
+            <h3>1000+</h3>
+            <p>Happy Travellers</p>
+          </div>
+          <div class="hero-stat">
+            <h3>25+</h3>
+            <p>Destinations</p>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ==================== FOOTER ==================== -->
-<footer id="contact">
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <h3>✈ TourEase</h3>
-        <p>Making travel simple, memorable, and affordable for everyone. Book your dream tour with confidence.</p>
+  <!-- ==================== DESTINATIONS ==================== -->
+  <section class="section" id="destinations">
+    <div class="container">
+      <div class="section-title">
+        <span class="label">Popular Destinations</span>
+        <h2>Top Places to Visit</h2>
+        <p>Explore hand-picked destinations loved by thousands of travellers every year.</p>
       </div>
-      <div class="footer-col">
-        <h4>Quick Links</h4>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="packages.html">Packages</a></li>
-          <li><a href="login.html">Login</a></li>
-          <li><a href="register.html">Register</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Destinations</h4>
-        <ul>
-          <li><a href="#">Goa</a></li>
-          <li><a href="#">Rajasthan</a></li>
-          <li><a href="#">Kerala</a></li>
-          <li><a href="#">Manali</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Contact Us</h4>
-        <div class="contact-info">
-          <span>📍 123 Travel Street, Mumbai, India</span>
-          <span>📞 +91 98765 43210</span>
-          <span>✉ hello@tourease.in</span>
+
+      <div class="destinations-grid">
+        <div class="destination-card">
+          <img src="https://static.toiimg.com/photo/msid-55310626,width-96,height-65.cms" alt="Goa" loading="lazy" />
+          <div class="destination-overlay">
+            <h3>Goa</h3>
+            <p>🏖 Beaches & Nightlife</p>
+          </div>
+        </div>
+        <div class="destination-card">
+          <img src="https://cdn.pixabay.com/photo/2021/04/06/11/22/hawa-mahal-6156123_1280.jpg" alt="Rajasthan"
+            loading="lazy" />
+          <div class="destination-overlay">
+            <h3>Rajasthan</h3>
+            <p>🏰 Forts & Culture</p>
+          </div>
+        </div>
+        <div class="destination-card">
+          <img src="https://tse3.mm.bing.net/th/id/OIP.-Db4n8VsbPZiP0z7qZIhYgHaE8?pid=Api&h=220&P=0" alt="Kerala"
+            loading="lazy" />
+          <div class="destination-overlay">
+            <h3>Kerala</h3>
+            <p>🌿 Backwaters & Nature</p>
+          </div>
+        </div>
+        <div class="destination-card">
+          <img src="https://tse4.mm.bing.net/th/id/OIP.Ycla5EgIM4aNiJ461wARPAHaEK?pid=Api&h=220&P=0" alt="Manali"
+            loading="lazy" />
+          <div class="destination-overlay">
+            <h3>Manali</h3>
+            <p>❄ Snow & Adventure</p>
+          </div>
+        </div>
+        <div class="destination-card">
+          <img src="https://www.andamanisland.in/storage/blogs/180225122732-andamanbeaches.webp" alt="Andaman"
+            loading="lazy" />
+          <div class="destination-overlay">
+            <h3>Andaman</h3>
+            <p>🐠 Islands & Diving</p>
+          </div>
+        </div>
+        <div class="destination-card">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6-7kbegzDCL5p6e5umYGaXtmlBzLZyRAutQ&s"
+            alt="Varanasi" loading="lazy" />
+          <div class="destination-overlay">
+            <h3>Varanasi</h3>
+            <p>🕌 Spirituality & Heritage</p>
+          </div>
         </div>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p>© 2024 TourEase. All rights reserved. Built with ❤ for college project.</p>
-    </div>
-  </div>
-</footer>
+  </section>
 
-<script src="js/utils.js"></script>
-<script>
-  // Load featured packages from API
-  async function loadFeaturedPackages() {
-    const container = document.getElementById('featuredPackages');
-    try {
-      const packages = await apiRequest('/packages');
-      
-      // Show first 3 packages as featured
-      const featured = packages.slice(0, 3);
-      
-      if (featured.length === 0) {
-        container.innerHTML = `
+  <!-- ==================== FEATURED PACKAGES ==================== -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-title">
+        <span class="label">Featured Packages</span>
+        <h2>Popular Tour Packages</h2>
+        <p>Our most loved tour packages with the best value for money.</p>
+      </div>
+      <!-- Packages loaded from API -->
+      <div class="packages-grid" id="featuredPackages">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading packages...</p>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:40px;">
+        <a href="packages.html" class="btn-primary" style="padding:14px 36px; font-size:1rem; display:inline-block;">
+          View All Packages →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== WHY US ==================== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-title">
+        <span class="label">Why Choose Us</span>
+        <h2>The TourEase Advantage</h2>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:28px;">
+        <div style="text-align:center; padding:32px 24px;">
+          <div style="font-size:2.5rem; margin-bottom:16px;">🏅</div>
+          <h3 style="font-family:'Playfair Display',serif; margin-bottom:10px;">Best Price Guarantee</h3>
+          <p style="color:var(--text-light); font-size:0.9rem;">We offer the most competitive prices with no hidden
+            charges.</p>
+        </div>
+        <div style="text-align:center; padding:32px 24px;">
+          <div style="font-size:2.5rem; margin-bottom:16px;">🛡</div>
+          <h3 style="font-family:'Playfair Display',serif; margin-bottom:10px;">Safe & Secure</h3>
+          <p style="color:var(--text-light); font-size:0.9rem;">Your safety is our top priority on every trip we plan.
+          </p>
+        </div>
+        <div style="text-align:center; padding:32px 24px;">
+          <div style="font-size:2.5rem; margin-bottom:16px;">🎯</div>
+          <h3 style="font-family:'Playfair Display',serif; margin-bottom:10px;">Expert Guidance</h3>
+          <p style="color:var(--text-light); font-size:0.9rem;">Our travel experts curate every itinerary with care.</p>
+        </div>
+        <div style="text-align:center; padding:32px 24px;">
+          <div style="font-size:2.5rem; margin-bottom:16px;">📞</div>
+          <h3 style="font-family:'Playfair Display',serif; margin-bottom:10px;">24/7 Support</h3>
+          <p style="color:var(--text-light); font-size:0.9rem;">We are always here to help, before and during your trip.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TESTIMONIALS ==================== -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-title">
+        <span class="label">Testimonials</span>
+        <h2>What Our Travellers Say</h2>
+        <p>Real experiences shared by real travellers who explored the world with TourEase.</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"The Goa trip was absolutely amazing! Everything from hotel to sightseeing was perfectly organised. Will
+            definitely book again."</p>
+          <div class="testimonial-user">
+            <div class="testimonial-avatar">A</div>
+            <div>
+              <h4>Arjun Mehta</h4>
+              <span>Goa Beach Package</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"Kerala backwaters tour was a dream come true. The houseboat stay was unforgettable. TourEase made it so
+            simple to book!"</p>
+          <div class="testimonial-user">
+            <div class="testimonial-avatar">P</div>
+            <div>
+              <h4>Priya Sharma</h4>
+              <span>Kerala Backwaters Tour</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★☆</div>
+          <p>"Rajasthan heritage tour was well-planned. The forts and palaces were breathtaking. Good value for money
+            and great service."</p>
+          <div class="testimonial-user">
+            <div class="testimonial-avatar">R</div>
+            <div>
+              <h4>Rohan Verma</h4>
+              <span>Rajasthan Heritage Tour</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>✈ TourEase</h3>
+          <p>Making travel simple, memorable, and affordable for everyone. Book your dream tour with confidence.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="packages.html">Packages</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="register.html">Register</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Destinations</h4>
+          <ul>
+            <li><a href="#">Goa</a></li>
+            <li><a href="#">Rajasthan</a></li>
+            <li><a href="#">Kerala</a></li>
+            <li><a href="#">Manali</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact Us</h4>
+          <div class="contact-info">
+            <span>📍 123 Travel Street, Mumbai, India</span>
+            <span>📞 +91 98765 43210</span>
+            <span>✉ hello@tourease.in</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 TourEase. All rights reserved. Built with ❤ for college project.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/utils.js"></script>
+
+  <script>
+    // Load featured packages from API
+    async function loadFeaturedPackages() {
+      const container = document.getElementById('featuredPackages');
+      try {
+        const packages = await apiRequest('/packages');
+
+        // Filter packages to show only those with 'featured: true' or just top 3
+        const featured = packages.slice(0, 3);
+
+        if (featured.length === 0) {
+          container.innerHTML = `
           <div class="empty-state" style="grid-column:1/-1">
             <div class="icon">📦</div>
             <h3>No packages yet</h3>
             <p>Admin can add packages from the admin panel.</p>
           </div>`;
-        return;
-      }
+          return;
+        }
 
-      container.innerHTML = featured.map(pkg => createPackageCard(pkg)).join('');
-    } catch (err) {
-      container.innerHTML = `
+        container.innerHTML = featured.map(pkg => createPackageCard(pkg)).join('');
+      } catch (err) {
+        container.innerHTML = `
         <div class="empty-state" style="grid-column:1/-1">
           <div class="icon">⚠</div>
           <h3>Could not load packages</h3>
           <p>Please make sure the backend server is running.</p>
         </div>`;
+      }
     }
-  }
 
-  // Create package card HTML
-  function createPackageCard(pkg) {
-    return `
-      <div class="package-card">
+    // Create package card HTML - Logic updated to make whole card clickable
+    function createPackageCard(pkg) {
+      // Mapping images based on location if the database image is broken or default
+      const getFineImage = (location, dbImg) => {
+        if (dbImg && !dbImg.includes('placeholder')) return dbImg;
+
+        const imgMap = {
+          'Goa': 'https://static.toiimg.com/photo/msid-55310626,width-96,height-65.cms',
+          'Manali': 'https://tse4.mm.bing.net/th/id/OIP.Ycla5EgIM4aNiJ461wARPAHaEK?pid=Api&h=220&P=0',
+          'Kerala': 'https://tse3.mm.bing.net/th/id/OIP.-Db4n8VsbPZiP0z7qZIhYgHaE8?pid=Api&h=220&P=0',
+          'Dubai': 'https://tse4.mm.bing.net/th/id/OIP.1THUOhnXAIXXsBHC-OJcBAHaE8?pid=Api&h=220&P=0',
+          'Bali': 'https://img.freepik.com/premium-photo/pura-ulun-danu-bratan-hindu-temple-with-boat-bratan-lake-landscape-sunrise-bali-indonesia_29505-855.jpg',
+          'Paris': 'https://t4.ftcdn.net/jpg/02/96/15/35/360_F_296153501_B34baBHDkFXbl5RmzxpiOumF4LHGCvAE.jpg'
+        };
+
+        // Match key or return a high-quality travel default
+        const key = Object.keys(imgMap).find(k => location.includes(k));
+        return imgMap[key];
+      };
+
+      const displayImg = getFineImage(pkg.location, pkg.image);
+
+      return `
+      <div class="package-card" 
+           onclick="window.location.href='details.html?id=${pkg._id}'" 
+           style="cursor: pointer; transition: transform 0.3s ease;">
         <div class="package-img">
-          <img src="${pkg.image}" alt="${pkg.title}" loading="lazy"
-               onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80'" />
+          <img src="${displayImg}" alt="${pkg.title}" loading="lazy" />
           <span class="package-badge">⭐ ${pkg.rating || 4.5}</span>
         </div>
         <div class="package-body">
@@ -309,16 +345,17 @@
             <div class="package-price">
               ${formatPrice(pkg.price)} <small>/ person</small>
             </div>
-            <a href="details.html?id=${pkg._id}" class="btn-primary" style="font-size:0.85rem; padding:8px 18px;">
+            <button class="btn-primary" style="font-size:0.85rem; padding:8px 18px; pointer-events: none;">
               View Details
-            </a>
+            </button>
           </div>
         </div>
       </div>`;
-  }
+    }
 
-  loadFeaturedPackages();
-</script>
+    loadFeaturedPackages();
+  </script>
 
 </body>
+
 </html>
